@@ -1,0 +1,16 @@
+name: Build Armbian Image
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # ubuntu-24.04-arm, ubuntu-24.04-riscv
+    steps:
+      - uses: armbian/build@main
+        with:
+          armbian_token: ${{ secrets.GITHUB_TOKEN }}
+          armbian_board: "orangepizero2"
+          armbian_release: "sid"
+          armbian_target: "build"
+          armbian_ui: "minimal"
+          armbian_runner_clean: "yes" # recommended for Github runners
