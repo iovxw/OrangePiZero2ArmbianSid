@@ -6,6 +6,9 @@ jobs:
   build:
     runs-on: ubuntu-latest # ubuntu-24.04-arm, ubuntu-24.04-riscv
     steps:
+      - run: |
+          sudo apt update
+          sudo apt -y install linux-modules-extra-$(uname -r)
       - uses: armbian/build@main
         with:
           armbian_token: ${{ secrets.GITHUB_TOKEN }}
