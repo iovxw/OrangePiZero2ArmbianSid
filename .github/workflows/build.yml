@@ -1,15 +1,29 @@
 name: Build Armbian Image
 on:
   workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
 
 jobs:
   build:
     runs-on: ubuntu-latest # ubuntu-24.04-arm, ubuntu-24.04-riscv
     steps:
-      - run: |
+      - name: Install kernel modules
+        run: |
           sudo apt update
           sudo apt -y install linux-modules-extra-$(uname -r)
-      - uses: armbian/build@main
+      # Enable tmate debugging of manually-triggered workflows if the input option was provided
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+        with:
+          limit-access-to-actor: true
+      - name: Build Armbian
+        uses: armbian/build@main
         with:
           armbian_token: ${{ secrets.GITHUB_TOKEN }}
           armbian_board: "orangepizero2"
