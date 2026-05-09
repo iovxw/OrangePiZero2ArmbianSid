@@ -11,11 +11,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest # ubuntu-24.04-arm, ubuntu-24.04-riscv
+    permissions:
+        contents: write # Create release
     steps:
       - name: Install kernel modules
         run: |
-          sudo apt update
-          sudo apt -y install linux-modules-extra-$(uname -r)
+          sudo apt-get update
+          sudo apt-get -y install linux-modules-extra-$(uname -r)
+          sudo modprobe f2fs
       # Enable tmate debugging of manually-triggered workflows if the input option was provided
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
